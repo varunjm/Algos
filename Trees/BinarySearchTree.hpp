@@ -13,9 +13,9 @@ class BinarySearchTree {
 private:
     Node* root;
 
-    void traversal_inorder_helper(Node * tree);
-    void traversal_preorder_helper(Node * tree);
-    void traversal_postorder_helper(Node * tree);
+    void traversal_inorder_helper(Node* tree);
+    void traversal_preorder_helper(Node* tree);
+    void traversal_postorder_helper(Node* tree);
 
 public:
 

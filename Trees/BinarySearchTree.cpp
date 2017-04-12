@@ -52,32 +52,32 @@ bool BinarySearchTree::insert_node(int value) {
     if(root->value == INF) {
         root->value = value;
         return true;
-    } else {
-        Node* current = root;
-        Node* newNode = get_node();
+    }
 
-        // Failed to allocate memory to a new node
-        if (newNode == nullptr) {
-            return false;
-        }
+    Node* current = root;
+    Node* newNode = get_node();
 
-        while (true) {
-            if (value <= current->value) {
-                if (current->left_child == nullptr) {
-                    current->left_child = newNode;
-                    current->left_child->value = value;
-                    return true;
-                } else {
-                    current = current->left_child;
-                }
+    // Failed to allocate memory to a new node
+    if (newNode == nullptr) {
+        return false;
+    }
+
+    while (true) {
+        if (value <= current->value) {
+            if (current->left_child == nullptr) {
+                current->left_child = newNode;
+                current->left_child->value = value;
+                return true;
             } else {
-                if (current->right_child == nullptr) {
-                    current->right_child = newNode;
-                    current->right_child->value = value;
-                    return true;
-                } else {
-                    current = current->right_child;
-                }
+                current = current->left_child;
+            }
+        } else {
+            if (current->right_child == nullptr) {
+                current->right_child = newNode;
+                current->right_child->value = value;
+                return true;
+            } else {
+                current = current->right_child;
             }
         }
     }
@@ -100,55 +100,59 @@ bool BinarySearchTree::remove_node(int value) {
     // If tree is empty remove is unsucessful
     if (root->value == INF) {
         return false;
-    } else {
-        Node* current = root;
-        Node* parent = nullptr;
-        Node* toBeDeleted;
-        Node* successor;
-        Node* successorParent = nullptr;
+    }
 
-        while (true) {
-            if (value == current->value) {
-                if (current->right_child == nullptr and current->left_child == nullptr) {
-                    if(parent == nullptr) {
-                        current->value = INF;
-                    } else {
-                        parent->left_child = nullptr;
-                        delete current;
-                    }
-                } else if (current->right_child == nullptr) {
-                    toBeDeleted = current->left_child;
-                    current->value = current->left_child->value;
-                    current->right_child = current->left_child->right_child;
-                    current->left_child = current->left_child->left_child;
-                    delete toBeDeleted;
+    Node* current = root;
+    Node* parent = nullptr;
+    Node* toBeDeleted;
+    Node* successor;
+    Node* successorParent = nullptr;
+
+    while (true) {
+        if (value == current->value) {
+            if (current->right_child == nullptr and current->left_child == nullptr) {
+                if(parent == nullptr) {
+                    current->value = INF;
                 } else {
-                    successor = current->right_child;
-                    successorParent = nullptr;
-
-                    while(successor->left_child != nullptr) {
-                        successorParent = successor;
-                        successor = successor->left_child;
-                    }
-
-                    if (successorParent == nullptr) {
-                        current->right_child = successor->right_child;
-                    } else {
-                        successorParent->left_child = successor->right_child;
-                    }
-                    current->value = successor->value;
-                    delete successor;
+                    parent->left_child = nullptr;
+                    delete current;
                 }
-
-                return true;
+            } else if (current->right_child == nullptr) {
+                toBeDeleted = current->left_child;
+                current->value = current->left_child->value;
+                current->right_child = current->left_child->right_child;
+                current->left_child = current->left_child->left_child;
+                delete toBeDeleted;
             } else {
-                parent = current;
+                successor = current->right_child;
+                successorParent = nullptr;
 
-                if (current->value < value) {  // Search in the right subtree
-                    current = current->right_child;
-                } else {                    // Search in the left subtree
-                    current = current->left_child;
+                while(successor->left_child != nullptr) {
+                    successorParent = successor;
+                    successor = successor->left_child;
                 }
+
+                if (successorParent == nullptr) {
+                    current->right_child = successor->right_child;
+                } else {
+                    successorParent->left_child = successor->right_child;
+                }
+                current->value = successor->value;
+                delete successor;
+            }
+
+            return true;
+        } else {
+            parent = current;
+
+            if (current->value < value) {  // Search in the right subtree
+                current = current->right_child;
+            } else {                    // Search in the left subtree
+                current = current->left_child;
+            }
+
+            if (current == nullptr) {
+                return false;
             }
         }
     }
